@@ -1,0 +1,30 @@
+# vim: ft=plumed
+
+#RESTART 
+
+#generated with gmx editconf -f topol.tpr -o reference.pdb, see https://www.plumed.org/doc-v2.7/user-doc/html/_m_o_l_i_n_f_o.html
+MOLINFO MOLTYPE=protein STRUCTURE=chignolin-ref.pdb
+WHOLEMOLECULES ENTITY0=1-166
+
+# Define CVs
+
+# Select Calpha
+PROTEIN: GROUP ATOMS=1-166
+CA: GROUP ATOMS=5,26,47,61,73,88,102,109,123,147
+# RMSD
+rmsd_ca: RMSD REFERENCE=chignolin-ca.pdb TYPE=OPTIMAL
+# END-TO-END DISTANCE
+end: DISTANCE ATOMS=5,147
+# HBONDS
+hbonds: CONTACTMAP ATOMS1=23,145 ATOMS2=45,120 ATOMS3=56,100 ATOMS4=56,107 SWITCH={RATIONAL R_0=0.4 NN=6 MM=8} SUM
+ene: ENERGY
+
+# Define Bias
+mc: ECV_MULTITHERMAL ARG=ene MIN_TEMP=270 MAX_TEMP=700 
+opes: OPES_EXPANDED PACE=500 ARG=mc.* WALKERS_MPI 
+
+# PRINT
+PRINT STRIDE=500 ARG=* FILE=COLVAR
+FLUSH STRIDE=5000
+
+ENDPLUMED

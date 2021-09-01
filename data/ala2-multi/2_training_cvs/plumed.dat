@@ -1,0 +1,8 @@
+# vim:ft=plumed
+
+# Define descriptors
+INCLUDE FILE=../plumed-descriptors.dat
+
+PRINT STRIDE=500 ARG=* FILE=COLVAR_DRIVER
+
+ENDPLUMED

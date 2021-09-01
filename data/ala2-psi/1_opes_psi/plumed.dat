@@ -1,0 +1,16 @@
+# vim:ft=plumed
+
+# Define CVs
+phi: TORSION ATOMS=5,7,9,15
+psi: TORSION ATOMS=7,9,15,17
+ene: ENERGY
+
+# Define Descriptors
+INCLUDE FILE=../plumed-descriptors.dat
+
+# Define Bias
+opes: OPES_METAD ARG=psi BARRIER=40 SIGMA=0.15 PACE=500 STATE_WFILE=STATE_PSI
+
+PRINT FMT=%g STRIDE=2500 FILE=COLVAR ARG=*
+
+ENDPLUMED

@@ -1,0 +1,20 @@
+; Parameters describing what to do, when to stop and what to save
+integrator      = cg         ; Algorithm (steep = steepest descent minimization)
+;emstep		= 0.001
+emtol           = 1.0           ; Stop minimization when the maximum force < 1.0 kJ/mol
+nsteps          = 50000           ; Maximum number of (minimization) steps to perform
+nstenergy       = 10            ; Write energies to disk every nstenergy steps
+nstxtcout       = 10000            ; Write coordinates to disk every nstxtcout steps
+xtc_grps        = System        ; Which coordinate group(s) to write to disk
+energygrps      = System        ; Which energy group(s) to write to disk
+
+; Parameters describing how to find the neighbors of each atom and how to calculate the interactions
+nstlist         = 0             ; Frequency to update the neighbor list and long range forces
+ns_type         = simple        ; Method to determine neighbor list (simple, grid)
+rlist           = 1.4           ; Cut-off for making neighbor list (short range forces)
+coulombtype     = cut-off       ; Treatment of long range electrostatic interactions
+rcoulomb        = 1.4           ; long range electrostatic cut-off
+rvdw            = 1.4           ; long range Van der Waals cut-off
+constraints     = none          ; Bond types to replace by constraints
+pbc             = no            ; Periodic Boundary Conditions (yes/no)
+cutoff-scheme	= Group

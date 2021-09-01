@@ -1,0 +1,14 @@
+# vim:ft=plumed
+
+# Define CVs
+phi: TORSION ATOMS=5,7,9,15
+psi: TORSION ATOMS=7,9,15,17
+ene: ENERGY
+
+# Define Bias
+ecv: ECV_MULTITHERMAL ARG=ene MAX_TEMP=600 
+opes: OPES_EXPANDED ARG=ecv.* PACE=500
+
+PRINT FMT=%g STRIDE=500 FILE=COLVAR ARG=phi,psi,ene,opes.*
+
+ENDPLUMED

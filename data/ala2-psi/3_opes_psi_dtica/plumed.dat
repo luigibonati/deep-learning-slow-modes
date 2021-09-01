@@ -1,0 +1,23 @@
+# vim:ft=plumed
+LOAD FILE=../../../plumed-libtorch-interface/PytorchModel.cpp
+
+# Define CVs
+phi: TORSION ATOMS=5,7,9,15
+psi: TORSION ATOMS=7,9,15,17
+ene: ENERGY
+
+# Define descriptors
+INCLUDE FILE=../plumed-descriptors.dat
+
+# Deep-TICA CVs
+# here deep.node-1 --> Deep-TICA 1
+#      deep.node-0 --> Deep-TICA 2
+deep: PYTORCH_MODEL MODEL=../2_training_cvs/model_all.pt ARG=d1,d2,d3,d4,d5,d6,d7,d8,d9,d10,d11,d12,d13,d14,d15,d16,d17,d18,d19,d20,d21,d22,d23,d24,d25,d26,d27,d28,d29,d30,d31,d32,d33,d34,d35,d36,d37,d38,d39,d40,d41,d42,d43,d44,d45
+
+# Define Bias
+static: OPES_METAD RESTART=YES FILE=KERNELS_PSI ARG=psi BARRIER=40 SIGMA=0.15 PACE=50000000 STATE_RFILE=STATE_PSI
+opes: OPES_METAD ARG=deep.node-0 BARRIER=30 SIGMA=0.025 PACE=500 STATE_WFILE=STATE
+
+PRINT FMT=%g STRIDE=100 FILE=COLVAR ARG=*
+
+ENDPLUMED

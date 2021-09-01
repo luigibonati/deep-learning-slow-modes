@@ -1,0 +1,82 @@
+### LAMMPS inputfile ###
+#------- Global Setup --------------------- 
+timer timeout ${max_time}
+variable seed world 745801 # 93734 12832 21934 57383 49172
+units         metal 
+atom_style    full 
+
+# ---------- Box and Atoms --------------------- 
+#variable numCells  equal 3  
+#variable mass equal 28.085       # relative atomic mass
+#variable sideCells equal 4.5     #side of a single sc cell
+#lattice         diamond ${sideCells}        # A
+#region          box block 0 ${numCells} 0 ${numCells} 0 ${numCells} units lattice
+#create_box      1 box
+#create_atoms    1 box
+#mass            1 ${mass}
+#change_box      all triclinic
+read_restart restart.cd-1700K
+#cd-1700K 
+
+# ---------- Interatomic Potential --------------------- 
+pair_style      sw
+pair_coeff      * * Si.sw Si
+
+# ---------- Simulation Settings --------------------- 
+variable temperature equal 1700 
+variable pressure    equal 1
+variable tstep       equal 0.002
+variable tempDamp    equal 100*${tstep}  #standard: 100 timesteps
+variable presDamp    equal 1000*${tstep} #standard: 1000 timesteps
+neigh_modify    delay 10 every 1
+timestep	${tstep}
+
+# -------- Thermalization Run ------------------- 
+#minimize 1.0e-2 1.0e-3 100 1000
+#reset_timestep  0
+## NVT
+#fix             1 all nve
+#fix             2 all temp/csvr ${temperature} ${temperature} ${tempDamp} ${seed}
+#velocity        all create ${temperature} ${seed} dist gaussian
+#run             10000
+#unfix           1
+#unfix           2
+## NPT
+#fix             2 all nph iso ${pressure} ${pressure} ${presDamp}
+#fix             3 all temp/csvr ${temperature} ${temperature} ${tempDamp} ${seed}
+#velocity        all create ${temperature} ${seed} dist gaussian
+#run             10000
+#unfix           2
+#unfix           3
+# ---------- Backup and Print --------------------- 
+shell bck.meup.sh restart.end dump.dcd
+variable out_seldom   equal 50000
+variable out_often    equal 500
+thermo        ${out_often} #out_seldom
+thermo_style  custom step temp pe press lx ly lz pxx pyy pzz pxy pxz pyz
+thermo_modify flush yes
+restart       ${out_seldom} restart.A restart.B
+
+# ---------- Simulation Run --------------------- 
+reset_timestep 	0
+dump  simDump all atom ${out_often} dump.lammpstrj
+dump_modify simDump append yes
+dump  simDump2 all dcd ${out_often} dump.dcd
+# NPT
+fix   1 all plumed plumedfile plumed.dat outfile log.plumed
+fix   2 all nph iso ${pressure} ${pressure} ${presDamp}
+#fix   2 all nph &
+#		x ${pressure} ${pressure} ${presDamp} &
+#		y ${pressure} ${pressure} ${presDamp} &
+#		z ${pressure} ${pressure} ${presDamp} &
+#		xy 0.0 0.0 ${presDamp} &
+#		yz 0.0 0.0 ${presDamp} &
+#		xz 0.0 0.0 ${presDamp} &
+#		couple xyz
+fix   3 all temp/csvr ${temperature} ${temperature} ${tempDamp} ${seed}
+fix		4 all momentum 10000 linear 1 1 1 angular
+run   150000000
+
+# ---------- End --------------------- 
+write_restart  restart.end
+

@@ -1,0 +1,8 @@
+NN nodes   	= 95,30,30,3
+NN activ   	= tanh
+lag_time   	= 0.5
+batch_size 	= 400k
+loss_type  	= sum
+loss_n_eig 	= 1
+lrate      	= 0.001
+L2reg      	= 0.0
