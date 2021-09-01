@@ -5,9 +5,7 @@
 
 This repository contains input data and code related to the manuscript:
 
-* data --> input files for the simulations 
-* mlcvs --> python package to train the Deep-TICA CVs
-* plumed-libtorch-interface --> interface to load Pytorch models in PLUMED2 for enhanced sampling
-* tutorial --> jupyter notebook with tutorial to train the CVs
-
-
+* `data` --> input files for the simulations 
+* `mlcvs` --> python package to train the Deep-TICA CVs
+* `plumed-libtorch-interface` --> interface to load Pytorch models in PLUMED2 for enhanced sampling
+* `tutorial` --> jupyter notebook with tutorial to train the CVs
