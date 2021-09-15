@@ -1,0 +1,8 @@
+###### Requirements without Version Specifiers ######`
+numpy
+pandas
+matplotlib
+
+###### Requirements with Version Specifiers ######`
+torch == 1.5.0		
+torchvision == 0.6.0
