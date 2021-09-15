@@ -98,6 +98,9 @@ PytorchModel::PytorchModel(const ActionOptions&ao):
 
   checkRead();
 
+  //reference
+  log.printf("Please cite >> Bonati et al., J. Phys. Chem. Lett. 11, (2020)\n"); 
+
   //check the dimension of the output
   log.printf("Checking output dimension:\n");
   std::vector<float> input_test (_n_in);
@@ -156,7 +159,6 @@ void PytorchModel::calculate() {
     input_S.grad().zero_();
     //for(unsigned i=0; i<_n_in; i++)
     //	input_S.grad()[0][i] = 0.;
- 
   }
 
 }
