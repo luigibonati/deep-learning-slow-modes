@@ -1,5 +1,10 @@
 # vim: ft=plumed
 
+####################################
+#  >> Chignolin <<
+#  DRIVER - Compute descriptors
+####################################
+
 UNITS LENGTH=nm
 
 dd_1-5: DISTANCE ATOMS=1,5

@@ -1,5 +1,13 @@
 # vim:ft=plumed
+
+####################################
+#  >> Silicon <<
+#  OPES Deep-LDA (static) + Deep-TICA
+####################################
+
+# Load structure factor code
 LOAD FILE=../StructureFactor.miller.cpp
+# Load Plumed-torch interface
 LOAD FILE=../../../plumed-libtorch-interface/PytorchModel.cpp
 
 UNITS LENGTH=A

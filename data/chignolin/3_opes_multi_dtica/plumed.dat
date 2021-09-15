@@ -1,5 +1,11 @@
 # vim: ft=plumed
 
+####################################
+#  >> Chignolin <<
+#  OPES Multicanonical (static) + Deep-TICA
+####################################
+
+# Load Plumed-torch interface
 LOAD FILE=../../../plumed-libtorch-interface/PytorchModel.cpp
 
 #generated with gmx editconf -f topol.tpr -o reference.pdb, see https://www.plumed.org/doc-v2.7/user-doc/html/_m_o_l_i_n_f_o.html

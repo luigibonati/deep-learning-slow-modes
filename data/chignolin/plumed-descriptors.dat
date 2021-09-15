@@ -1,5 +1,10 @@
 # vim: ft=plumed
 
+####################################
+#  >> Chignolin <<
+#  Aux. file - list of descriptors 
+####################################
+
 # Define Descriptors
 dd_1-54: DISTANCE ATOMS=1,54
 dd_1-152: DISTANCE ATOMS=1,152

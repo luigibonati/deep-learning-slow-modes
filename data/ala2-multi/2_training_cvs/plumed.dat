@@ -1,5 +1,10 @@
 # vim:ft=plumed
 
+####################################
+#  >> Alanine Dipeptide <<
+#  DRIVER - Compute descriptors 
+####################################
+
 # Define descriptors
 INCLUDE FILE=../plumed-descriptors.dat
 

@@ -1,5 +1,10 @@
 # vim:ft=plumed
 
+####################################
+#  >> Alanine Dipeptide <<
+#  Aux. file - list of descriptors 
+####################################
+
 # Define descriptors
 d1:  DISTANCE ATOMS=2,5
 d2:  DISTANCE ATOMS=2,6
