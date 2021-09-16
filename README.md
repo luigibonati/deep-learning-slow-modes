@@ -3,7 +3,7 @@
 
 [![arXiv](https://img.shields.io/badge/arXiv-2107.03943-critical)](https://arxiv.org/abs/2107.03943)
 [![MaterialsCloud](https://img.shields.io/badge/MaterialsCloud-10.24435-lightgrey)](https://doi.org/10.24435/materialscloud:3g-9x)
-
+[![plumID:21.039](https://www.plumed-nest.org/eggs/21/039/badge.svg)](https://www.plumed-nest.org/eggs/21/039/)
 
 This repository contains input data and code related to the manuscript:
 
