@@ -6,7 +6,7 @@
 ####################################
 
 # Load structure factor code
-LOAD FILE=../StructureFactor.miller.cpp
+LOAD FILE=../StructureFactor_descriptor.test.cpp
 # Load Plumed-torch interface
 LOAD FILE=../../../plumed-libtorch-interface/PytorchModel.cpp
 
@@ -30,7 +30,7 @@ epv: COMBINE PERIODIC=NO COEFFICIENTS=1,0.06022140857 ARG=ene,vol
 Q6 SPECIES=1-216 SWITCH={CUBIC D_0=2.35 D_MAX=3} VMEAN LOWMEM LABEL=q6
 
 # Define Descriptors
-cv: STRUCTURE_FACTOR_COMPONENT_TEST STRUCTURE=DIAMOND UNIT_CELLS=3 ACTIVE_SHELLS=27,72,99,144,171,216,243,288,315
+cv: STRUCTURE_FACTOR_DESCRIPTOR_TEST STRUCTURE=DIAMOND UNIT_CELLS=3 ACTIVE_SHELLS=27,72,99,144,171,216,243,288,315
 
 # Deep-TICA and Deep-LDA CVs
 deep: PYTORCH_MODEL MODEL=../2_training_cvs/model_1.pt ARG=cv.*

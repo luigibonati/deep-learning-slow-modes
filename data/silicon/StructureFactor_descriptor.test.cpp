@@ -1,23 +1,16 @@
 /* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   Copyright (c) 2016,2017 The plumed team
-   (see the PEOPLE file at the root of the distribution for a list of names)
+  Development version of the Structure Factor collective variable.
+  This is a work in progress, be careful: edges are rough.
 
-   See http://www.plumed.org for more information.
+  Authors: Michele Invernizzi - https://github.com/invemichele
+           Luigi Bonati       - https://github.com/luigibonati
 
-   This file is part of plumed, version 2.
-
-   plumed is free software: you can redistribute it and/or modify
-   it under the terms of the GNU Lesser General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   plumed is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public License
-   along with plumed.  If not, see <http://www.gnu.org/licenses/>.
+  Please read and cite: 
+  - "Collective variables for the study of crystallisation"
+    Karmakar, Invernizzi, Rizzi, Parrinello - Mol. Phys. (2021)
+  Additional reading:
+  - "Deep learning the slow modes for rare events sampling"
+    Bonati, Piccini, Parrinello - PNAS (2021)
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 #include "colvar/Colvar.h"
 #include "colvar/ActionRegister.h"
@@ -33,7 +26,7 @@ using namespace std;
 namespace PLMD {
 namespace colvar {
 
-//+PLUMEDOC COLVAR STRUCTURE_FACTOR_COMPONENT_TEST
+//+PLUMEDOC COLVAR STRUCTURE_FACTOR_DESCRIPTOR_TEST
 /*
 Use as CVs the instantaneous per shell structure factor:
  S_k = 1/(N*m_k)\sum_{|\vec{k}|=k}|\rho_{\vec{k}}|^2
@@ -41,15 +34,19 @@ Use as CVs the instantaneous per shell structure factor:
 There is also the possibility of considering only certain atoms and a ficticious box edge L.
 These options are mainly just vestigia from the past.
 
+Optionally, one can compute only the peaks related to a given crystal structure based on miller indexes.
+This is implemented for BCC,FCC and DIAMOND structures. It requires to specify both the STRUCTURE keyword and the number of repetitions of the unit cell (UNIT_CELLS). See second example below.
 
 \par Examplexs
 
-label: STRUCTURE_FACTOR_COMPONENT_TEST NO_VIRIAL N2_MAX=30
+label: STRUCTURE_FACTOR_DESCRIPTOR_TEST NO_VIRIAL N2_MAX=30
+
+label: STRUCTURE_FACTOR_DESCRIPTOR_TEST ACTIVE_SHELLS=27,72,99 STRUCTURE=DIAMOND UNIT_CELLS=3
 
 */
 //+ENDPLUMEDOC
 
-class StructureFactor_component_test : public Colvar {
+class StructureFactor_descriptor_test : public Colvar {
 
 private:
   bool first_run_;
@@ -64,24 +61,23 @@ private:
   std::vector<unsigned> fwv_mult_;
   double k_const_;
 
-  //TODO
+  // select based on miller indices
   bool use_structure_;
   int UnitCells_;
   string Structure_;
-
   std::vector<Value*> valueSk;
 
   void init_fwv(std::vector<unsigned>&);
 
 public:
-  StructureFactor_component_test(const ActionOptions&);
+  StructureFactor_descriptor_test(const ActionOptions&);
   virtual void calculate();
   static void registerKeywords(Keywords& );
 };
 
-PLUMED_REGISTER_ACTION(StructureFactor_component_test,"STRUCTURE_FACTOR_COMPONENT_TEST")
+PLUMED_REGISTER_ACTION(StructureFactor_descriptor_test,"STRUCTURE_FACTOR_DESCRIPTOR_TEST")
 
-void StructureFactor_component_test::registerKeywords(Keywords& keys)
+void StructureFactor_descriptor_test::registerKeywords(Keywords& keys)
 {
   Colvar::registerKeywords(keys);
   keys.add("optional","N2_MAX","the maximum square module of the indexing integer vector of the Fourier wave vectors (k) considered");
@@ -91,18 +87,18 @@ void StructureFactor_component_test::registerKeywords(Keywords& keys)
   keys.add("atoms","ATOMS","calculate Fourier components using only these atoms. Default is to use all atoms");
   keys.add("optional","BOX_EDGE","manually set the edge L of the cubic box to be considered");
   keys.add("optional","NAME_PRECISION","set the number of digits used for components name");
-  
+
   keys.add("optional","UNIT_CELLS","set the number of unit cells");
   keys.add("optional","STRUCTURE","choose the target structure");
 
   keys.addFlag("NO_VIRIAL",false,"skip the virial calculations, useful to speedup when a correct pressure is not needed (e.g. in NVT simulations)");
   keys.addFlag("SERIAL",false,"perform the calculation in serial even if multiple tasks are available");
 
-  keys.addOutputComponent("Sk","default","the instantaneous structure factor averaged over a k-shell");
+  keys.addOutputComponent("Sk","default","the instantaneous structure factor averaged over a k-shell"); //FIXME not true!
   ActionWithValue::useCustomisableComponents(keys); //needed to have an unknown number of components
 }
 
-StructureFactor_component_test::StructureFactor_component_test(const ActionOptions&ao):
+StructureFactor_descriptor_test::StructureFactor_descriptor_test(const ActionOptions&ao):
   PLUMED_COLVAR_INIT(ao)
 {
 //parse and initialize:
@@ -208,13 +204,13 @@ StructureFactor_component_test::StructureFactor_component_test(const ActionOptio
   {
 //    if(active_shells[n2])
 //    {
-      oss.str("");
+    oss.str("");
 //      oss<<"Sk-"<<k_const_*sqrt(n2+1);
-      oss<<"Sk-"<<"["<<fwv_[k][0]<<"_"<<fwv_[k][1]<<"_"<<fwv_[k][2]<<"]";
-      addComponentWithDerivatives(oss.str());
-      componentIsNotPeriodic(oss.str());
+    oss<<"Sk-"<<"["<<fwv_[k][0]<<"_"<<fwv_[k][1]<<"_"<<fwv_[k][2]<<"]";
+    addComponentWithDerivatives(oss.str());
+    componentIsNotPeriodic(oss.str());
 //      valueSk[n2]=getPntrToComponent(oss.str());
-      valueSk[k]=getPntrToComponent(oss.str());
+    valueSk[k]=getPntrToComponent(oss.str());
 //    }
   }
 
@@ -238,7 +234,7 @@ StructureFactor_component_test::StructureFactor_component_test(const ActionOptio
 }
 
 // calculator
-void StructureFactor_component_test::calculate()
+void StructureFactor_descriptor_test::calculate()
 {
 //this exists only because the function getBox() does not work before here
   if (first_run_)
@@ -260,7 +256,7 @@ void StructureFactor_component_test::calculate()
     log.printf("internal coordinates will be used, thus k_const_=2*pi\n");
     k_const_=2*PLMD::pi;
   }
-  
+
 //build arrays to store per axis phases, as complex numbers:
 //  - each row stores a different power, starting from zero: x_axis[n][j]=exp(-i*2pi/L*n*X_j)
 //  - even indexes are the real part and odd ones the imaginary
@@ -400,7 +396,7 @@ void StructureFactor_component_test::calculate()
   }
 }
 
-void StructureFactor_component_test::init_fwv(std::vector<unsigned>& active_shells)
+void StructureFactor_descriptor_test::init_fwv(std::vector<unsigned>& active_shells)
 {
 //initialize support variable n_maxs so that n_maxs[n2]^2<=n2_max_-n2
   std::vector<unsigned> n_maxs(n2_max_+1);
@@ -423,35 +419,35 @@ void StructureFactor_component_test::init_fwv(std::vector<unsigned>& active_shel
       {
         const unsigned n2=nx2ny2+nz*nz-1;
         if (active_shells[n2])
-        { 
+        {
           bool select_k=false;
           if (use_structure_)
           {
-	    //check if remainder with respect to # of unit cell  is zero
-	    if (nx%UnitCells_ == 0 && ny%UnitCells_ == 0 && nz%UnitCells_ ==0)
-	    {
-	      int h = nx/UnitCells_;
-	      int k = ny/UnitCells_;
-	      int l = nz/UnitCells_;
-	       
-	      //check if satisfies the condition for miller indexes	
+	        //check if remainder with respect to # of unit cell  is zero
+            if (nx%UnitCells_ == 0 && ny%UnitCells_ == 0 && nz%UnitCells_ ==0)
+            {
+              int h = nx/UnitCells_;
+              int k = ny/UnitCells_;
+              int l = nz/UnitCells_;
+              
+              //check if satisfies the condition for miller indexes	
               if (Structure_=="BCC"){
-		if ( (h+k+l)%2 == 0 )
-		  select_k=true;
-	      }else if (Structure_=="FCC"){
-		if ( (h%2==0 && k%2==0 && l%2==0 ) || ((h+1)%2==0 && (k+1)%2==0 && (l+1)%2==0 ) )
+                if ( (h+k+l)%2 == 0 )
+                  select_k=true;
+              }else if (Structure_=="FCC"){
+                if ( (h%2==0 && k%2==0 && l%2==0 ) || ((h+1)%2==0 && (k+1)%2==0 && (l+1)%2==0 ) )
                   select_k=true;
               }else if (Structure_=="DIAMOND"){
-	 	if ( (h+k+l)%4 == 0 || (h+k+l - 1 )%2 == 0)
+                if ( (h+k+l)%4 == 0 || (h+k+l - 1 )%2 == 0)
                   select_k=true;
-	      }else{
-	        plumed_massert(Structure_=="","Unkown structure type"); //TODO	
-              }
-	    }
+                }else{
+                  plumed_massert(Structure_=="","Unkown structure type"); //TODO	
+                }
+            }
           } 
           else 
           {
-	    select_k=true;
+            select_k=true;
           }
 
           if (select_k){
