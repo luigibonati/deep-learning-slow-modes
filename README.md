@@ -1,6 +1,7 @@
 # Deep learning the slow modes for rare events sampling
 #### Luigi Bonati, GiovanniMaria Piccini, and Michele Parrinello, _arXiv preprint_ arXiv:2107.03943 (2021).
 
+[![PNAS](https://img.shields.io/badge/PNAS-2021_118_(44)-blue)](https://doi.org/10.1073/pnas.2113533118)
 [![arXiv](https://img.shields.io/badge/arXiv-2107.03943-critical)](https://arxiv.org/abs/2107.03943)
 [![MaterialsCloud](https://img.shields.io/badge/MaterialsCloud-10.24435-lightgrey)](https://doi.org/10.24435/materialscloud:3g-9x)
 [![plumID:21.039](https://www.plumed-nest.org/eggs/21/039/badge.svg)](https://www.plumed-nest.org/eggs/21/039/)
