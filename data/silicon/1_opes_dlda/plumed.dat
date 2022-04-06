@@ -7,8 +7,6 @@
 
 # Load structure factor code
 LOAD FILE=../StructureFactor_descriptor.test.cpp
-# Load Plumed-torch interface
-LOAD FILE=../../../plumed-libtorch-interface/PytorchModel.cpp
 
 UNITS LENGTH=A
 
@@ -33,7 +31,7 @@ Q6 SPECIES=1-216 SWITCH={CUBIC D_0=2.35 D_MAX=3} VMEAN LOWMEM LABEL=q6
 cv: STRUCTURE_FACTOR_DESCRIPTOR_TEST STRUCTURE=DIAMOND UNIT_CELLS=3 ACTIVE_SHELLS=27,72,99,144,171,216,243,288,315
 
 # Deep-LDA CV
-deep: PYTORCH_MODEL MODEL=model_lda.pt ARG=cv.*
+deep: PYTORCH_MODEL FILE=model_lda.pt ARG=cv.*
 
 # Define Bias
 opes: OPES_METAD ARG=deep.node-0 BARRIER=1100 PACE=500 TEMP=1700
