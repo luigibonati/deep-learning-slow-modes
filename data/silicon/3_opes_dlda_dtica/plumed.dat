@@ -35,7 +35,8 @@ deep: PYTORCH_MODEL FILE=../2_training_cvs/model_1.pt ARG=cv.*
 lda: PYTORCH_MODEL FILE=model_lda.pt ARG=cv.*
 
 # Define Bias
-static: OPES_METAD ARG=lda.node-0 BARRIER=1100 PACE=100000000 TEMP=1700 RESTART=YES FILE=../1_opes_dlda/KERNELS_LDA
+# uncomment to enable the static bias (requires to first perform a OPES simulation)
+#static: OPES_METAD ARG=lda.node-0 BARRIER=1100 PACE=100000000 TEMP=1700 RESTART=YES FILE=../1_opes_dlda/KERNELS_LDA
 opes: OPES_METAD ARG=deep.node-0 BARRIER=700 PACE=500 TEMP=1700
 
 PRINT STRIDE=500  FILE=COLVAR ARG=* 

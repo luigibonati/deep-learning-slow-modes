@@ -32,7 +32,8 @@ deep: PYTORCH_MODEL FILE=../2_training_cvs/model_1.pt ARG=dd_1-54,dd_1-152,dd_5-
 
 # Define Bias
 mc: ECV_MULTITHERMAL ARG=ene TEMP_MIN=270 TEMP_MAX=700
-static: OPES_EXPANDED PACE=100000000 ARG=mc.* WALKERS_MPI FILE=../1_opes_multi/DELTAFS RESTART=YES
+# uncomment to enable the static bias (requires to first perform a OPES multithermal simulation)
+#static: OPES_EXPANDED PACE=100000000 ARG=mc.* WALKERS_MPI FILE=../1_opes_multi/DELTAFS RESTART=YES 
 opes: OPES_METAD ARG=deep.node-0 TEMP=340 PACE=500 BARRIER=30 WALKERS_MPI 
 
 # PRINT
