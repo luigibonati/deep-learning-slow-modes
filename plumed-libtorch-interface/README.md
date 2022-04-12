@@ -1,5 +1,7 @@
 ## PLUMED - Pytorch interface
 
+**[2022/03/27] The PyTorch Interface is now included in the PLUMED2 official repository (development version). Please follow the instructions of the [PYTORCH MODULE](https://www.plumed.org/doc-master/user-doc/html/_p_y_t_o_r_c_h.html) to configure PLUMED with LibTorch. The following instructions are only kept for compatibility.**
+
 In order to use the Deep-TICA CVs to enhance the sampling, we need to load the NN models inside PLUMED.
 
 This folder contains a Plumed-libtorch interface, as developed for the [Deep-LDA](https://github.com/luigibonati/data-driven-CVs) NN CVs.
