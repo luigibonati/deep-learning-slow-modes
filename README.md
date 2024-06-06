@@ -6,6 +6,12 @@
 [![MaterialsCloud](https://img.shields.io/badge/MaterialsCloud-10.24435-lightgrey)](https://doi.org/10.24435/materialscloud:3g-9x)
 [![plumID:21.039](https://www.plumed-nest.org/eggs/21/039/badge.svg)](https://www.plumed-nest.org/eggs/21/039/)
 
+> [!IMPORTANT]
+> This repository is kept as supporting material for the manuscript, but it is no longer updated. Check out the [mlcolvar](https://mlcolvar.readthedocs.io)  library for data-driven CVs, where you can find up-to-date tutorials and examples.
+> 
+> [<img src="https://raw.githubusercontent.com/luigibonati/mlcolvar/main/docs/images/logo_name_black_big.png" width="200" />](https://mlcolvar.readthedocs.io)
+
+
 This repository contains input data and code related to the manuscript:
 
 * `data` --> input files for the simulations and the CVs training
